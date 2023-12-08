@@ -42,4 +42,4 @@ Equipped with this new information, you now need to find the real first and last
 - `7pqrstsixteen`
 In this example, the calibration values are 29, 83, 13, 24, 42, 14, and 76. Adding these together produces 281.
 
-What is the sum of all of the calibration values?
+**What is the sum of all of the calibration values?**

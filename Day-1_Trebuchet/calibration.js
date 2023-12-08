@@ -1,8 +1,34 @@
 const fs = require("fs");
 
+const numbersInLetters = [
+  { one: 1 },
+  { two: 2 },
+  { three: 3 },
+  { four: 4 },
+  { five: 5 },
+  { six: 6 },
+  { seven: 7 },
+  { eight: 8 },
+  { nine: 9 },
+];
+
+// Iterate through the array and replace words with their numeric values
+function replaceNumericValues(inputString) {
+  numbersInLetters.forEach((numberObj) => {
+    const word = Object.keys(numberObj)[0];
+    const numericValue = numberObj[word];
+    const regex = new RegExp(word, "g");
+    inputString = inputString.replace(regex, (match) => {
+      const firstLetter = match[0];
+      const lastLetter = match[match.length - 1];
+      return `${firstLetter}${numericValue}${lastLetter}`;
+    });
+  });
+  return inputString;
+}
+
 let lineNumbers;
 let lineResult;
-
 
 fs.readFile("calibration-value.txt", "utf8", (err, data) => {
   if (err) {
@@ -15,8 +41,8 @@ fs.readFile("calibration-value.txt", "utf8", (err, data) => {
 
   // Retreiving the numbers from each line
   lineNumbers = lines.map((line) => {
-
-    const allLineNumbers = line.match(/\d+/g).map(Number);
+    const replacedNumbers = replaceNumericValues(line);
+    const allLineNumbers = replacedNumbers.match(/\d+/g).map(Number);
     const allDigits = allLineNumbers.join("").split("").map(Number);
     return allDigits;
   });

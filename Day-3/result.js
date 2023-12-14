@@ -65,15 +65,12 @@ fs.readFile("data.txt", "utf8", (err, data) => {
   let linesAndIndexes = [];
   specialCharactersIndexes.forEach((character) => {
     const { characterIndex, lineIndex } = character;
-
     const lineAbove = { lineAbove: lines[lineIndex - 1] };
     const characterIndexMinusOne = {
       characterIndexMinusOne: characterIndex - 1,
     };
-
     const currentLine = { currentLine: lines[lineIndex] };
     const currentCharacterIndex = { characterIndex: characterIndex };
-
     const lineBelow = { lineBelow: lines[lineIndex + 1] };
     const characterIndexPlusOne = { characterIndexPlusOne: characterIndex + 1 };
 
@@ -81,15 +78,12 @@ fs.readFile("data.txt", "utf8", (err, data) => {
     const getNumber = (lineObj, indexObj) => {
       const lineKey = Object.keys(lineObj)[0];
       const indexKey = Object.keys(indexObj)[0];
-
       const line = lineObj[lineKey];
       const index = indexObj[indexKey];
-
       let lineOfNumber;
       if (lineKey === "lineAbove") lineOfNumber = lineIndex - 1;
       if (lineKey === "currentLine") lineOfNumber = lineIndex;
       if (lineKey === "lineBelow") lineOfNumber = lineIndex + 1;
-
       const coordinates = {
         character: character.character,
         lineOfNumber,

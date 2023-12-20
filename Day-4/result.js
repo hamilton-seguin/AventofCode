@@ -67,11 +67,11 @@ fs.readFile("data.txt", "utf8", (err, data) => {
   // console.log("winLength", winLength);
 
   // create a new array with all the card copies
-  let totalCards = []; // to keep track of all the cards that have been copied and looped through
+  let totalCards = 0; // to keep track of all the cards that have been copied and looped through
   let initCardList = [...winLength];
-  totalCards.push(...initCardList);
+  totalCards += initCardList.length;
 
-  function firstLoop(initialCards) {
+  function loopCards(initialCards) {
     if (initialCards.length === 0) return totalCards;
     let cardCopy = [];
     initialCards.forEach((card) => {
@@ -79,16 +79,13 @@ fs.readFile("data.txt", "utf8", (err, data) => {
       if (match > 0) {
         for (let i = 0; i < match; i++) {
           cardCopy.push(winLength[i + cardNum]);
-          totalCards.push(winLength[i + cardNum]);
+          totalCards ++;
         }
       }
     });
-    return firstLoop(cardCopy);
+    return loopCards(cardCopy);
   }
 
-  const totalCardsLooped = firstLoop(initCardList);
-  // console.log('totalCardsLooped', totalCardsLooped);
-
-  const resultPart2 = totalCardsLooped.length;
+  const resultPart2 = loopCards(initCardList);
   console.log("resultPart2", resultPart2);
 });

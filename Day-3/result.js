@@ -16,8 +16,8 @@ const testArray = [
 const smallTest = [
   "............................................................................................................................................", // 0
   "............................................................................................................................................", // 1
-  ".......@...................*.............................*.664.................................@............................................", // 2
-  "..............................................................*................*......................*...........$.........................",
+  ".......@...................*...........................22+.664................1................@............................................", // 2
+  "....................................98........................*................=......................*...........$.........................",
   ".....................................&.......*................943...............6....*..................../.....*.....=....*....*..../......",
   "............................................................................................................................................",
   "............................................................................................................................................",
@@ -86,8 +86,10 @@ fs.readFile("data.txt", "utf8", (err, data) => {
       if (lineKey === "lineBelow") lineOfNumber = lineIndex + 1;
       const coordinates = {
         character: character.character,
-        lineOfNumber,
+        lineOfCharacter: lineIndex,
+        indexOfCharacter: characterIndex,
         number: Number(line[index]),
+        lineOfNumber,
         indexOfNumber: index,
       };
       return !isNaN(line[index]) ? coordinates : null;
@@ -111,7 +113,7 @@ fs.readFile("data.txt", "utf8", (err, data) => {
   linesAndIndexes = linesAndIndexes.flat();
   // console.log("linesAndIndexes", linesAndIndexes);
 
- // Filter out consecutive indexes if they are on the same line
+  // Filter out consecutive indexes if they are on the same line
   function removeConsecutiveIndexes(arr) {
     // Iterate in reverse order to safely remove elements from the array
     for (let i = arr.length - 1; i > 0; i--) {
@@ -125,7 +127,50 @@ fs.readFile("data.txt", "utf8", (err, data) => {
     }
   }
   removeConsecutiveIndexes(linesAndIndexes);
-  // console.log("linesAndIndexes", linesAndIndexes);
+
+  linesAndIndexes.sort((a, b) => a.lineOfNumber - b.lineOfNumber);
+  // console.log("linesAndIndexes after reduce", linesAndIndexes);
+
+  // Count how many times a unique character touches a number, each character is unique if character, lineOfCharacter, indexOfCharacter are all the same
+  let numberTouchList = linesAndIndexes;
+  const numberTouches = numberTouchList.reduce((acc, cur) => {
+    const existingIndex = acc.findIndex(
+      (obj) =>
+        obj.character === cur.character &&
+        obj.lineOfCharacter === cur.lineOfCharacter &&
+        obj.indexOfCharacter === cur.indexOfCharacter
+    );
+    if (existingIndex >= 0) {
+      acc[existingIndex].numberTouches++;
+      acc[existingIndex].numberTouched.push({
+        lineOfNumber: cur.lineOfNumber,
+        indexOfNumber: cur.indexOfNumber,
+        number: cur.number,
+      });
+    } else {
+      acc.push({
+        character: cur.character,
+        lineOfCharacter: cur.lineOfCharacter,
+        indexOfCharacter: cur.indexOfCharacter,
+        numberTouched: [
+          {
+            lineOfNumber: cur.lineOfNumber,
+            indexOfNumber: cur.indexOfNumber,
+            number: cur.number,
+          },
+        ],
+        numberTouches: 1,
+      });
+    }
+    return acc;
+  }, []);
+  // console.log("numberTouches", numberTouches);
+
+  // Filter out numbers that are not touched exaclty twice
+  const filteredNumberTouches = numberTouches.filter(
+    (obj) => obj.numberTouches === 2
+  );
+  // console.log("filteredNumberTouches", filteredNumberTouches);
 
   // Regroup interesting indexes by line
   const newArray = linesAndIndexes.flat().reduce((acc, cur) => {
@@ -138,6 +183,7 @@ fs.readFile("data.txt", "utf8", (err, data) => {
       acc.push({
         lineOfNumber: cur.lineOfNumber,
         indexOfNumber: [cur.indexOfNumber],
+        number: cur.number,
       });
     }
     return acc;
@@ -147,7 +193,6 @@ fs.readFile("data.txt", "utf8", (err, data) => {
   newArray.forEach((obj) => {
     obj.indexOfNumber.sort((a, b) => a - b);
   });
-  newArray.sort((a, b) => a.lineOfNumber - b.lineOfNumber);
   // console.log("newArray", newArray);
 
   // Get the full number out of its index in each line
@@ -187,6 +232,29 @@ fs.readFile("data.txt", "utf8", (err, data) => {
     });
   });
   // console.log("results", results);
+
+  let resultPart2 = [];
+  filteredNumberTouches.forEach((obj) => {
+    const { numberTouched } = obj;
+    numberTouched.forEach((number) => {
+      const { lineOfNumber, indexOfNumber } = number;
+      const result = getNumberList(lines[lineOfNumber], indexOfNumber);
+      resultPart2.push(result);
+    });
+  });
+  // console.log("resultPart2", resultPart2);
+
+  // Loop until array is empty, multiply first 2 numbers, remove them from the array, add the result to the result array
+  let resultToAddUp = []
+  while (resultPart2.length > 0) {
+    const multiplyBySymbol = resultPart2[0] * resultPart2[1];
+    resultPart2.splice(0, 2);
+    resultToAddUp.push(multiplyBySymbol);
+  }
+
+  // Final result Part 2 add up
+  const finalResultPart2 = resultToAddUp.reduce((a, b) => Number(a) + Number(b));
+  console.log("finalResultPart2", finalResultPart2);
 
   // Add up final result
   const finalResult = results.reduce((a, b) => Number(a) + Number(b));

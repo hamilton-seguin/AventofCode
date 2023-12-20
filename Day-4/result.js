@@ -1,7 +1,12 @@
 import fs from "fs";
 
 const testArray = [
-  "Card   2: 17  9  7 91 32 97 76 39 83 88 | 88 25 46 50 91 18 39 76 17 22 28 82 44 66 52  7 11 56 77  9 40 83 97 32 47",
+  "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53",
+  "Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19",
+  "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1",
+  "Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83",
+  "Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36",
+  "Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11",
 ];
 
 fs.readFile("data.txt", "utf8", (err, data) => {
@@ -11,14 +16,18 @@ fs.readFile("data.txt", "utf8", (err, data) => {
   }
 
   const lines = data.split("\n");
-  console.log("lines", lines);
+  // console.log("lines", lines);
 
   // split into 2 list of numbers
   const cards = lines.map((line, i) => {
     const test = line.split(":").splice(1, 1);
     const [winNumStr, myNumStr] = test[0].split("|");
     const winNum = winNumStr.trim().split(" ").map(Number);
-    const myNum = myNumStr.trim().split(" ").filter((str) => str !== "").map(Number);
+    const myNum = myNumStr
+      .trim()
+      .split(" ")
+      .filter((str) => str !== "")
+      .map(Number);
     return { card: i + 1, winNum, myNum };
   });
   // console.log("cards", cards);
@@ -44,6 +53,42 @@ fs.readFile("data.txt", "utf8", (err, data) => {
   // console.log("matchResult", matchResult);
 
   // calculate total points
-  const totalPoints = matchResult.reduce((a, b) => a + b, 0);
-  console.log("totalPoints", totalPoints);
+  const resultPart1 = matchResult.reduce((a, b) => a + b);
+  // console.log("resultPart1", resultPart1);
+
+
+      // PART 2
+  // refactor totalWinNum match to only be the length of match
+  const winLength = totalWinNum;
+  winLength.map((card) => {
+    const matchLength = card.match.length;
+    card.match = matchLength;
+  });
+  // console.log("winLength", winLength);
+
+  // create a new array with all the card copies
+  let totalCards = []; // to keep track of all the cards that have been copied and looped through
+  let initCardList = [...winLength];
+  totalCards.push(...initCardList);
+
+  function firstLoop(initialCards) {
+    if (initialCards.length === 0) return totalCards;
+    let cardCopy = [];
+    initialCards.forEach((card) => {
+      const { card: cardNum, match } = card;
+      if (match > 0) {
+        for (let i = 0; i < match; i++) {
+          cardCopy.push(winLength[i + cardNum]);
+          totalCards.push(winLength[i + cardNum]);
+        }
+      }
+    });
+    return firstLoop(cardCopy);
+  }
+
+  const totalCardsLooped = firstLoop(initCardList);
+  // console.log('totalCardsLooped', totalCardsLooped);
+
+  const resultPart2 = totalCardsLooped.length;
+  console.log("resultPart2", resultPart2);
 });

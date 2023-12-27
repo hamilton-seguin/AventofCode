@@ -39,57 +39,84 @@ function numbersToArray(str) {
 
 // allMaps = allMaps.splice(1, allMaps.length - 1)
 removeText(allMaps);
-console.log("allMaps", allMaps);
+// console.log("allMaps", allMaps);
 
 const newMap = allMaps.map((map, i) => {
   const noText = map.splice(1, allMaps[i].length - 1);
   const numbersArray = numbersToArray(noText);
   return numbersArray;
 });
-console.log("newMap", newMap);
+// console.log("newMap", newMap);
 
-function findLocation(seedArray, mapArray) {
+function getLocation(seedArray, mapArray) {
   let seedsLocation = [];
   seedArray.forEach((seed) => {
-    // console.log( "\n", "NEW SEED", seed);
     let currentSeed;
+
     mapArray.map((map, i) => {
       if (i === 0) currentSeed = seed;
       const mapLength = map.length;
-      // console.log("next group of maps", map);
-      // console.log("currentSeed", currentSeed);
-      // console.log("mapLength", mapLength);
       let foundIt;
+
       map.forEach((map, i) => {
         if (i === 0) foundIt = false;
         if (foundIt === true) return;
         const [destination, source, range] = map;
-        // console.log("currentSeed in map", currentSeed);
-        // console.log("map", map);
         if (currentSeed >= source && currentSeed <= range - 1 + source) {
           const aToB = currentSeed + (destination - source);
-          // console.log("A2B", aToB);
           foundIt = true;
-          // console.log("foundIt", foundIt);
           return (currentSeed = aToB);
         }
-        // console.log("not this map");
-        if (i === mapLength - 1 && !foundIt) {
-          // console.log("nextSeed = currentSeed", currentSeed);
-          return currentSeed;
-        }
+        if (i === mapLength - 1 && !foundIt) return currentSeed;
       });
-      if (i === mapArray.length - 1) {
-        // console.log("final currentSeed", currentSeed);
-        return seedsLocation.push(currentSeed);
-      }
+
+      if (i === mapArray.length - 1) return seedsLocation.push(currentSeed);
     });
   });
   return seedsLocation;
 }
 
-const result = findLocation(seedList, newMap);
-console.log("result", result);
+const result = getLocation(seedList, newMap);
+// console.log("result", result);
 
 const closestLocation = Math.min(...result);
 console.log("closestLocation", closestLocation);
+
+// PART 2
+const newMapReverse = newMap.reverse();
+console.log("newMapReverse", newMapReverse);
+
+const minSeed = Math.min(...seedList);
+
+let seedRanges = [];
+
+for (let i = 0; i < seedList.length; i += 2) {
+  seedRanges.push(seedList.slice(i, i + 2));
+}
+console.log("seedRanges", seedRanges);
+
+const doWeHaveThatSeed = (seed) =>
+  seedRanges.some(([seedStart, length]) => {
+    return seedStart <= seed && seedStart + length >= seed;
+  });
+
+function getSeedGivenLocation(step) {
+  for (const map of newMapReverse) {
+    for (const [destination, source, length] of map) {
+      if (destination <= step && destination + length > step) {
+        step = source + step - destination;
+        break;
+      }
+    }
+  }
+  return step;
+}
+
+for (let i = minSeed; i < 1_000_000_000; i++) {
+  const seed = getSeedGivenLocation(i);
+  if (doWeHaveThatSeed(seed)) {
+    console.log("seed", seed);
+    console.log("Part 2", i);
+    break;
+  }
+}

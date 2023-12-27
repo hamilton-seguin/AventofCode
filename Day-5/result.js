@@ -80,7 +80,7 @@ const result = getLocation(seedList, newMap);
 // console.log("result", result);
 
 const closestLocation = Math.min(...result);
-console.log("closestLocation", closestLocation);
+console.log("result Part 1", closestLocation);
 
 // PART 2
 const newMapReverse = newMap.reverse();
@@ -112,11 +112,13 @@ function getSeedGivenLocation(step) {
   return step;
 }
 
+let resultPart2;
 for (let i = minSeed; i < 1_000_000_000; i++) {
   const seed = getSeedGivenLocation(i);
   if (doWeHaveThatSeed(seed)) {
-    console.log("seed", seed);
-    console.log("Part 2", i);
+    resultPart2 = i;
     break;
   }
 }
+
+console.log("result Part 2", resultPart2);

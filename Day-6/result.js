@@ -13,8 +13,7 @@ const races = lines.map((map) =>
 let groupedRaces = races[0].map((race, i) => [race, races[1][i]]);
 // console.log("groupedRaces", groupedRaces);
 
-let errorMargins = [];
-groupedRaces.map((race) => {
+const halfOfWaysToWin = (race) => {
   const [raceTime, minDist] = race;
   let errorMargin = [];
   const optimalTime = Math.floor(raceTime / 2);
@@ -26,39 +25,40 @@ groupedRaces.map((race) => {
     }
     errorMargin.push(i);
   }
+  return errorMargin;
+};
+
+let errorMargins = [];
+groupedRaces.map((race) => {
+  const errorMargin = halfOfWaysToWin(race);
   errorMargins.push(errorMargin);
 });
 // console.log("errorMargins", errorMargins);
 
-const lenghtx2 = errorMargins.map((map, i) => {
-  if (
-    (map.length % 2 !== 0 && groupedRaces[i][0] % 2 !== 0) ||
-    map.length % 2 === 0
-  ) {
-    return map.length * 2;
+const normalizeResult = (arrayOfWins, groupedRacesArray) => {
+  if (groupedRacesArray[0] % 2 !== 0) {
+    return arrayOfWins.length * 2;
   }
-  return map.length * 2 - 1;
-});
-// console.log("lenghtx2", lenghtx2);
+  return arrayOfWins.length * 2 - 1;
+};
 
-const resultP1 = lenghtx2.reduce((a, b) => a * b);
+const allWaysToWin = errorMargins.map((map, i) => {
+  return normalizeResult(map, groupedRaces[i]);
+});
+// console.log("allWaysToWin", allWaysToWin);
+
+const resultP1 = allWaysToWin.reduce((a, b) => a * b);
 console.log("resultP1", resultP1);
 
-// const waysToWin = ([raceTime, record]) => {
-//   let lessThanRecord = 0;
-//   let pressTime = 1;
-//   while (pressTime * (raceTime - pressTime) < record) {
-//     lessThanRecord++;
-//     pressTime++;
-//   }
-//   return raceTime - lessThanRecord * 2 - 1;
-// };
 
-// const result = groupedRaces.map((race) => waysToWin(race));
-// console.log("result", result);
-// console.log(
-//   "result",
-//   result.reduce((a, b) => a * b)
-// );
+// Part 2
+const groupedRaces2 = races
+  .map((race) => race.map(String).reduce((a, b) => a + b))
+  .map(Number);
+// console.log("groupedRaces2", groupedRaces2);
 
-//
+const errorMargins2 = halfOfWaysToWin(groupedRaces2);
+// console.log("errorMargins2.length", errorMargins2.length);
+
+const resultP2 = normalizeResult(errorMargins2, groupedRaces2);
+console.log("resultP2", resultP2);

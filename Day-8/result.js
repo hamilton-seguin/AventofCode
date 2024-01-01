@@ -46,7 +46,7 @@ console.log("resultP1", resultP1);
 // Part 2
 // Find all nodeNames ending in A
 const startingNodes = nodes.filter((node) => node.nodeName.endsWith("A"));
-console.log("startingNodes", startingNodes);
+// console.log("startingNodes", startingNodes);
 
 // Loop through nodes following instructions
 function followInstructionsP2(instructions, nodes) {

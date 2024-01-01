@@ -72,7 +72,8 @@ Step 5: You choose all of the left paths, leading you to `11B` and `22C`.
 Step 6: You choose all of the right paths, leading you to `11Z` and `22Z`.
 So, in this example, you end up entirely on nodes that end in `Z` after 6 steps.
 
-Simultaneously start on every node that ends with `A`. How many steps does it take before you're only on nodes that end with Z?
+Simultaneously start on every node that ends with `A`. 
+**How many steps does it take before you're only on nodes that end with Z?**
 
 
 

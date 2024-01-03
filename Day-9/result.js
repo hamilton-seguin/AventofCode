@@ -46,3 +46,18 @@ const nextValueArray = diffArray.map((line) => nextValue(line));
 
 const resultP1 = nextValueArray.reduce((a,b) => a+b, 0)
 console.log("resultP1", resultP1);
+
+// Part 2
+function previousValue(arr) {
+  let previousValue = 0;
+  arr.reverse();
+  arr.forEach((num) => {
+    previousValue = num[0] - previousValue;
+  });
+  return previousValue;
+}
+const previousValueArray = diffArray.map((line) => previousValue(line));
+// console.log("previousValueArray", previousValueArray);
+
+const resultP2 = previousValueArray.reduce((a,b) => a+b, 0)
+console.log("resultP2", resultP2);

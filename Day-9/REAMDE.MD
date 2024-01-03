@@ -44,7 +44,7 @@ You can then start filling in placeholders from the bottom up. A needs to be the
     0   0   0   0   0
 ```
 
-Finally, you can fill in B, which needs to be the result of increasing 15 (the value to its left) by 3 (the value below it), or 18:
+Finally, you can fill in B, which needs to be the result of increasing 15 (the value to its left) by 3 (the value below it), or `18`:
 
 ```javascript
 0   3   6   9  12  15  18
@@ -52,7 +52,7 @@ Finally, you can fill in B, which needs to be the result of increasing 15 (the v
     0   0   0   0   0
 ```
 
-So, the next value of the first history is 18.
+So, the next value of the first history is `18`.
 
 Finding all-zero differences for the second history requires an additional sequence:
 
@@ -85,7 +85,7 @@ The third history requires even more sequences, but its next value can be found 
 
 So, the next value of the third history is `68`.
 
-If you find the next value for each history in this example and add them together, you get 114.
+If you find the next value for each history in this example and add them together, you get `114`.
 
 Analyze your OASIS report and extrapolate the next value for each history. 
 **What is the sum of these extrapolated values?**

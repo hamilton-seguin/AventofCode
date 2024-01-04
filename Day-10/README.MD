@@ -1,4 +1,5 @@
-# Day 10: Pipe Maze
+# Day 10: Pipe Maze 
+***LookUp Table & Scanline algorithm (+ FloodFill algorithm)***
 
 ## Part One
 You use the hang glider to ride the hot air from Desert Island all the way up to the floating metal island. This island is surprisingly cold and there definitely aren't any thermals to glide on, so you leave your hang glider behind.

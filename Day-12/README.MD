@@ -1,4 +1,5 @@
 # Day 12: Hot Springs
+*Binary Masks -  3D Dynamic Programming*
 
 ## Part One
 You finally reach the hot springs! You can see steam rising from secluded areas attached to the primary, ornate building.

@@ -18,14 +18,11 @@ function parseRow(row) {
 // Function to generate a new array based on the mask
 function generateArray(arr, pos, mask) {
   let arr2 = [...arr];
-  console.log("arr2 bfore", arr2);
   let mask2 = mask;
-  console.log("mask2", mask2);
   for (let i = 0; i < pos.length; i++) {
     arr2[pos[i]] = mask2 % 2 ? '#' : '.';
     mask2 = Math.floor(mask2 / 2);
   }
-  console.log("arr2", arr2);
   return arr2;
 }
 
@@ -69,3 +66,83 @@ function processArray(array) {
 
 const resultP1 = processArray(lines);
 console.log("resultP1", resultP1);
+
+
+// Part 2
+// Function to parse a row into an object
+function parseRowP2(row, scaleFactor) {
+  let [arr, conf] = row.split(' ');
+  return {
+    arr: Array.from({ length: scaleFactor }, () => arr).join('?').split(''),
+    conf: Array.from({ length: scaleFactor }, () => conf.split(',').map(x => parseInt(x))).flat()
+  };
+}
+
+// Function to initialize the dp array
+function initializeDp(n, m, p) {
+  return Array.from({ length: n + 1 },
+    () => Array.from({ length: m + 1 },
+      () => Array.from({ length: p + 1 }, () => 0)
+    )
+  );
+}
+
+// Function to fill the base cases in the dp array
+function fillBaseCases(dp, arr, n) {
+  dp[0][0][0] = 1;
+  let cnt = 0;
+  for (let i = 1; i <= n; i++) {
+    if (arr[i - 1] === '#') cnt++;
+    else cnt = 0;
+    if (cnt) dp[i][0][cnt] = 1;
+  }
+  for (let i = 1; i <= n; i++) {
+    if (arr[i - 1] === '#') break;
+    else dp[i][0][0] = 1;
+  }
+}
+
+// Function to fill the rest of the dp array
+function fillDp(dp, arr, conf, n, m, p) {
+  for (let i = 1; i <= n; i++) {
+    if (arr[i - 1] === '.') {
+      for (let j = 1; j <= m; j++) {
+        dp[i][j][0] = dp[i - 1][j - 1][conf[j - 1]] + dp[i - 1][j][0];
+      }
+    } else if (arr[i - 1] === '#') {
+      for (let j = 0; j <= m; j++) {
+        for (let k = 0; k < p; k++) {
+          dp[i][j][k + 1] = dp[i - 1][j][k];
+        }
+      }
+    } else {
+      for (let j = 1; j <= m; j++) {
+        dp[i][j][0] = dp[i - 1][j - 1][conf[j - 1]] + dp[i - 1][j][0];
+      }
+      for (let j = 0; j <= m; j++) {
+        for (let k = 0; k < p; k++) {
+          dp[i][j][k + 1] = dp[i - 1][j][k];
+        }
+      }
+    }
+  }
+}
+
+// Main function
+function processRows(rows, scaleFactor) {
+  return rows
+    .map(row => parseRowP2(row, scaleFactor))
+    .reduce((acc, { arr, conf }) => {
+      let n = arr.length;
+      let m = conf.length;
+      let p = Math.max(...conf);
+      let dp = initializeDp(n, m, p);
+      fillBaseCases(dp, arr, n);
+      fillDp(dp, arr, conf, n, m, p);
+      return acc + dp[n][m][0] + dp[n][m - 1][conf[m - 1]];
+    }, 0);
+}
+
+let scaleFactor = 5;
+const resultP2 = processRows(lines, scaleFactor);
+console.log("resultP2", resultP2);

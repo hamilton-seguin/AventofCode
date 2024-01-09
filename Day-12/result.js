@@ -1,11 +1,10 @@
 import fs from "fs";
 
-const data = fs.readFileSync("test.txt", { encoding: "utf8" });
+const data = fs.readFileSync("data.txt", { encoding: "utf8" });
 
 const lines = data.split("\n");
 // console.log("lines", lines);
 
-const testArray = [ '???..### 1,1,3'];
 // Function to parse a row into an object
 function parseRow(row) {
   let [arr, conf] = row.split(' ');
@@ -68,5 +67,5 @@ function processArray(array) {
     }, 0);
 }
 
-const resultP1 = processArray(testArray);
+const resultP1 = processArray(lines);
 console.log("resultP1", resultP1);

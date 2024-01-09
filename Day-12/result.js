@@ -67,7 +67,6 @@ function processArray(array) {
 const resultP1 = processArray(lines);
 console.log("resultP1", resultP1);
 
-
 // Part 2
 // Function to parse a row into an object
 function parseRowP2(row, scaleFactor) {
@@ -146,3 +145,63 @@ function processRows(rows, scaleFactor) {
 let scaleFactor = 5;
 const resultP2 = processRows(lines, scaleFactor);
 console.log("resultP2", resultP2);
+
+
+// OTHER SOLUTION, much longer but more readable
+// let cache = {};
+// let nums = [];
+
+// function poss(template, len, numpos) {
+//   let hid = [len, numpos];
+//   if (cache[hid]) return cache[hid];
+//   if (
+//     nums.slice(numpos).reduce((a, b) => a + b, 0) + nums.length - 1 - numpos >
+//     len
+//   )
+//     return 0;
+
+//   let ret = 0;
+//   let num = nums[numpos];
+
+//   if (numpos === nums.length - 1) {
+//     for (let i = 0; i <= len - num; i++) {
+//       if (
+//         !template.slice(0, i).includes("#") &&
+//         !template.slice(i, i + num).includes(".") &&
+//         !template.slice(i + num).includes("#")
+//       ) {
+//         ret++;
+//       }
+//     }
+//   } else {
+//     if (!template.slice(0, num).includes(".") && template[num] !== "#") {
+//       ret += poss(template.slice(num + 1), len - num - 1, numpos + 1);
+//     }
+//     if (template[0] !== "#") {
+//       ret += poss(template.slice(1), len - 1, numpos);
+//     }
+//   }
+
+//   return (cache[hid] = ret);
+// }
+
+// console.log(
+//   lines
+//     .map((line) => {
+//       let [template, numsStr] = line.trim().split(" ");
+//       nums = numsStr.split(",").map(Number);
+
+//       // part 1
+//       cache = {};
+//       let p1 = poss(template, template.length, 0);
+
+//       // part 2
+//       template = Array(5).fill(template).join("?");
+//       nums = Array(5).fill(nums).flat();
+//       cache = {};
+//       let p2 = poss(template, template.length, 0);
+
+//       return [p1, p2];
+//     })
+//     .reduce((a, b) => [a[0] + b[0], a[1] + b[1]], [0, 0])
+// );

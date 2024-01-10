@@ -1,0 +1,15 @@
+{
+  "name": "day-13",
+  "version": "1.0.0",
+  "description": "## Part one With your help, the hot springs team locates an appropriate spring which launches you neatly and precisely up to the edge of **Lava Island**.",
+  "main": "result.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  }
+}

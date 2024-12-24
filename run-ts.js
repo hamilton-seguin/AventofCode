@@ -1,7 +1,7 @@
 const { exec } = require('child_process')
 const path = require('path')
 
-const filePath = '2024/Day-1/' + process.argv[2]
+const filePath = process.argv[2] || '2024/Day-1/result.ts'
 
 if (!filePath) {
   console.error('Please provide a TypeScript file to run.')

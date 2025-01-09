@@ -1,0 +1,11 @@
+
+
+6,4,7,8,10,11
+i = 0 6 4 diff =  2 prev direction:  - new direction:  down 
+current 6 next 4
+i = 1 4 7 diff =  -3 prev direction:  down new direction:  up unsafe
+testing diff2 with : 4 8
+=>  4 8 diff2 =  -4 up unsafe
+Unsafe P2 unsafeOccurence: 2
+0
+lines.length 1
